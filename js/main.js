@@ -69,10 +69,22 @@ var platforms = [
 ]
 
 for (var y = 0; y > -100000; y -= 500) {
+  var color;
+  var r = Math.random();
+  if (r < 0.6) {
+    color = "black";
+  }
+  else if (r < 0.8) {
+    color = "rgb(255, 60, 60)";
+  }
+  else {
+    color = "rgb(100, 110, 255)";
+  }
   platforms.push({
     x: Math.random()*(width-200),
     y,
-    width: 200
+    width: 200,
+    color
   });
 }
 
@@ -96,7 +108,7 @@ $(document).ready(function() {
     // })
     
     $(document).keydown(function(e) {
-      console.log("keydown")
+      console.log(e.which)
       switch(e.which) {
         case 37: // left
           ball.vx -= 20
@@ -104,10 +116,15 @@ $(document).ready(function() {
         case 39: // right
           ball.vx += 20
           break;
+        case 32: // space
+          changeBgColor();
+          break;
       }
     });
     $("canvas").click(function(event){
-      ball.radius*=1.1;
+      // ball.radius*=1.1;
+
+      changeBgColor();
       // var xClickedOnCanvas = event.offsetX;
       // var widthCanvas = $("canvas").width();
       // if (xClickedOnCanvas < widthCanvas/2) {
@@ -146,6 +163,15 @@ function play() {
     update();
     drawEverything();
   }, intervalTimeout);
+}
+
+function changeBgColor() {
+  if ($("canvas").css("background-color") == "rgb(255, 60, 60)") {
+    $("canvas").css("background-color", "rgb(100, 110, 255)");
+  }
+  else {
+    $("canvas").css("background-color", "rgb(255, 60, 60)");
+  }
 }
 
 function update() {
@@ -214,7 +240,12 @@ function drawBall(ball) {
 
 function drawPlatform(platform) {
   ctx.save();  
-  ctx.fillStyle = "black";
+  if (platform.color) {
+    ctx.fillStyle = platform.color;
+  }
+  else {
+    ctx.fillStyle = "black";
+  }
   ctx.fillRect(platform.x, platform.y, platform.width, 30);
   ctx.restore();  
 }
