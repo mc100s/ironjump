@@ -2,8 +2,10 @@ var ctx;
 var width = 1000;
 var height = 1700;
 var ball = {};
+var camera = {};
 gravity = 5;
 intervalTimeout = 25; 
+var intervalId;
 
 var platforms = [
   {
@@ -89,14 +91,24 @@ for (var y = 0; y > -100000; y -= 500) {
 }
 
 
-var camera = {
-  y: 0,
-  vy: -3,
-  height: height
-}
 
 $(document).ready(function() {
+  displayBestScore();
   ctx =  $("canvas")[0].getContext("2d");
+  $(document).keydown(function(e) {
+    console.log(e.which)
+    switch(e.which) {
+      case 37: // left
+        ball.vx -= 20
+        break;
+      case 39: // right
+        ball.vx += 20
+        break;
+      case 32: // space
+        changeBgColor();
+        break;
+    }
+  });
   $('button').click(function() {
     document.documentElement.webkitRequestFullscreen();    
     play();
@@ -107,20 +119,7 @@ $(document).ready(function() {
     //   console.log("mouseup")
     // })
     
-    $(document).keydown(function(e) {
-      console.log(e.which)
-      switch(e.which) {
-        case 37: // left
-          ball.vx -= 20
-          break;
-        case 39: // right
-          ball.vx += 20
-          break;
-        case 32: // space
-          changeBgColor();
-          break;
-      }
-    });
+    
     $("canvas").click(function(event){
       // ball.radius*=1.1;
 
@@ -148,6 +147,16 @@ $(document).ready(function() {
   
 });
 
+function displayBestScore() {
+  if (localStorage.bestScore) {
+    $('.best-score').text('Best score: ' + localStorage.bestScore);
+  }
+}
+
+function setNewScore(score) {
+  localStorage.bestScore = Math.max(localStorage.bestScore, score);
+}
+
 function play() {
   $(".menu").hide();
   $("canvas").show();
@@ -159,7 +168,12 @@ function play() {
     vy: 10,
     color: 'black',
   }
-  setInterval(function() {
+  camera = {
+    y: 0,
+    vy: -3,
+    height: height
+  }
+  intervalId = setInterval(function() {
     update();
     drawEverything();
   }, intervalTimeout);
@@ -175,6 +189,10 @@ function changeBgColor() {
 }
 
 function update() {
+
+  if (isGameOver()) {
+    endGame();
+  }
   
   // var newBallY = ball.y + ball.vy;
   // var newBallVy = ball.vy + gravity;
@@ -205,6 +223,18 @@ function update() {
   camera.y += camera.vy;
     
   drawEverything();
+}
+
+function isGameOver() {
+  return ball.y > camera.y + camera.height;
+}
+
+function endGame() {
+  clearInterval(intervalId);
+  setNewScore(-1*camera.y);
+  displayBestScore();
+  $(".menu").show();
+  $("canvas").hide();
 }
 
 function drawEverything() {

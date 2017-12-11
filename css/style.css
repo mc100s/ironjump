@@ -34,6 +34,8 @@ canvas {
 .menu {
   display: flex;
   flex-direction: column;
+  text-align: center;
+  margin-bottom: 8vh;
 }
 
 
@@ -42,3 +44,13 @@ canvas {
   padding: 10px 20px;
   margin: 10px;
 }
+
+.menu .best-score {
+  margin: 20px;
+}
+
+.menu h1 {
+  font-size: 60px;
+  margin-bottom: 100px;
+}
+
