@@ -154,7 +154,12 @@ function displayBestScore() {
 }
 
 function setNewScore(score) {
-  localStorage.bestScore = Math.max(localStorage.bestScore, score);
+  if (localStorage.bestScore) {
+    localStorage.bestScore = Math.max(localStorage.bestScore, score);
+  }
+  else {
+    localStorage.bestScore = score;
+  }
 }
 
 function play() {
