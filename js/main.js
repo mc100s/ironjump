@@ -9,7 +9,6 @@ var intervalId;
 var debug = true; // Change it to false to remove the grid
 
 
-
 // When all the HTML is loaded
 $(document).ready(function() {  
   displayBestScore();
@@ -32,7 +31,6 @@ $(document).ready(function() {
   if(window.DeviceMotionEvent) {
     window.addEventListener("devicemotion", function (event) {
       ball.x -= event.accelerationIncludingGravity.x*5;
-      // drawMenu
     }, false);
   } else {
     console.log("The browser is not supporting devicemotion")
@@ -115,10 +113,7 @@ function update() {
     endGame();
   }
   
-  // var newBallY = ball.y + ball.vy;
-  // var newBallVy = ball.vy + gravity;
   var newBall = {
-    // ...ball,
     radius: 50,
     x: ball.x + ball.vx,
     y: ball.y + ball.vy,
@@ -126,9 +121,6 @@ function update() {
     vy: ball.vy + gravity,
     color: 'black',
   }
-
-    
-  // console.log("ball.y, newBallY, platforms[1].y", ball.y, newBallY, platforms[1].y)
 
   for (var i = 0; i < platforms.length; i++) {
     if (ball.y+ball.radius <= platforms[i].y && platforms[i].y <= newBall.y+ball.radius && platforms[i].x <= ball.x && ball.x <= platforms[i].x+platforms[i].width) {
@@ -138,8 +130,6 @@ function update() {
   }
 
   ball = newBall;
-
-
 
   if (camera.y > ball.y - ball.radius - 0.1*height) {
     camera.y = ball.y - ball.radius - 0.1*height;
@@ -167,7 +157,6 @@ function drawEverything() {
   ctx.save();
 
   ctx.translate(0, -camera.y);
-  // ctx.fillRect(ball.x, ball.y, 100, 100);
 
   drawBall(ball);
 
@@ -182,9 +171,6 @@ function drawEverything() {
   ctx.restore();
 
   drawMenu();
-  
-
-  
 }
 
 function drawBall(ball) {
@@ -224,9 +210,9 @@ function drawGridCoordinates() {
   ctx.restore();  
 }
 
+// Draw the top menu with the score
 function drawMenu(text) {
   ctx.save();  
-  
 
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, width, 90);
